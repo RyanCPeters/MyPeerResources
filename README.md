@@ -1,6 +1,6 @@
 # MyPeerResources
 
-  This repo contains homework code samples from some of my classmates, current and past, that I've helped to debug or analyze 
+  This repo contains homework code samples from some of my classmates, current and past, that I've helped to debug, analyze, or otherwise modify.
 
   I've undertaken this task as an opportunity to learn some of the many different ways people can think about the general purpose examples presented in my coursework. In doing so, I hope that I will become more capable of communicating abstract problems and concepts to people of different educational and social backgrounds from my own. 
 
