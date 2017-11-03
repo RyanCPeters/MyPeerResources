@@ -8,6 +8,8 @@
 // Deeksha Sharma 10/15/2017
 */
 
+
+
 using namespace std;
 
 /*
@@ -19,7 +21,7 @@ bool Cannibals::ValidState(char target[])
 { 
 	int numC = 0; //will keep track of the number of Cs. 
 	int numE = 0; //will keep track of the number of Es.
-	for (int i = 0; a[i]; i++)
+	for (int i = 0; i < SizeOfArray(target); i++)
 	{ //this will loop through the array and keep track of the number of Es and Cs
 		if (target[i] == 'E') numE++;
 		else numC++;
@@ -35,7 +37,7 @@ Post-condition: returns the number of elements in the array
 int Cannibals::SizeOfArray(char target[])
 {
 	int numElements = 0;
-	for (int i = 0; target[i]; i++)
+	for (int i = 0; i<sizeof(target)/ sizeof(target[0]); i++)
 	{
 		if (target[i] != NULL) numElements++;
 	}

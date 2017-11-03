@@ -13,6 +13,10 @@
 // Deeksha Sharma 10/10/2017
 */
 
+
+#include <vector>
+#include <string> 
+
 class Cannibals
 {
 public:
@@ -20,7 +24,7 @@ public:
 	char leftBank[] = {'E', 'E', 'E', 'C', 'C', 'C', 'L'}; 
 	char rightBank[6] = {0};
 	//possibleMoves is a vector of vectors of chars that holds all possible combination of moves 
-	vector<vector<char>> possibleMoves = {{'E', NULL},{ 'C',NULL },{ 'E','E' },{ 'C','C' },{ 'E','C' }}; 
+	std::vector<std::vector<char>> possibleMoves = {{'E', NULL},{ 'C',NULL },{ 'E','E' },{ 'C','C' },{ 'E','C' }};
 	//this will hold all the moves that lead to the solution
 	char solutionArray[40] = {0}; //DOES THIS INITIALIZE THE ARRAY TO NULL??
 
@@ -28,6 +32,6 @@ public:
 	bool MoveBoat(char[]); //moves people between banks //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
 	bool TryAMove(char[]); //the recursisve method 
 	int SizeOfArray(char[]); //gets size of array 
-	char PrintArray(char[]); //prints the array //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
+	string PrintArray(char[]); //prints the array //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
 };
 
