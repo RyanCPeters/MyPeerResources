@@ -17,12 +17,6 @@ int main()
 	//calls the constructor to create the possible moves array 
 	Cannibals cannibalInstance;
 
-	//this loop calls the recursive function and tries all possible moves 
-	for (int i = 0; i < cannibalInstance.possibleMoves.size(); ++i)
-	{
-		cannibalInstance.TryAMove(cannibalInstance.possibleMoves[i]);
-	}
 
-	//this prints out the contents of the rightBank array after the recursive call
-	PrintArray(cannibalInstance.solutionArray);
+
 }

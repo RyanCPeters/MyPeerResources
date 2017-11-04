@@ -19,19 +19,24 @@
 
 class Cannibals
 {
-public:
-	//last char is L if boat is on left bank and is R if boat is on right bank
-	char leftBank[] = {'E', 'E', 'E', 'C', 'C', 'C', 'L'}; 
-	char rightBank[6] = {0};
-	//possibleMoves is a vector of vectors of chars that holds all possible combination of moves 
-	std::vector<std::vector<char>> possibleMoves = {{'E', NULL},{ 'C',NULL },{ 'E','E' },{ 'C','C' },{ 'E','C' }};
-	//this will hold all the moves that lead to the solution
-	char solutionArray[40] = {0}; //DOES THIS INITIALIZE THE ARRAY TO NULL??
+private:
 
-	bool ValidState(char[]); //checks if banks are at a valid state
-	bool MoveBoat(char[]); //moves people between banks //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
-	bool TryAMove(char[]); //the recursisve method 
-	int SizeOfArray(char[]); //gets size of array 
-	string PrintArray(char[]); //prints the array //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
+	//last char is L if boat is on left bank and is R if boat is on right bank
+	std::vector<char> leftBank = {'E', 'E', 'E', 'C', 'C', 'C', 'L'};
+	const std::vector<std::vector<char>> possibleMoves;
+	const std::vector<char> failState;
+	const std:: vector<char> baseCase;
+
+public:
+
+	// creating constructor which will provide the definition of the possibleMoves public class member
+	Cannibals();
+
+	bool AddRemove(const std::vector<char> &nextMove, std::vector<char> &stateArray, const bool &goRight);
+	bool ValidState(const std::vector<char>&); //checks if banks are at a valid state
+	bool ValidState(const std::vector<char>&, const std::vector<char>& );
+	bool MoveBoat(const int &targetIndex, std::vector<char> &stateArray); //moves people between banks //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
+	std::vector<std::vector<char>> TryAMove(int &targetIndex, std::vector<char> myCurState); //the recursisve method
+	std::string PrintArray(const std::vector<char> &target)const; //prints the array //WHAT IS THE ERROR EXPECTED UNQUALIFIED_ID BEFORE '[' TOKEN
 };
 

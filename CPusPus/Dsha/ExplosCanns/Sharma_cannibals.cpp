@@ -1,4 +1,5 @@
 #include<iostream>
+#include <sstream>
 #include "Sharma_cannibals.h"
 
 /*
@@ -11,51 +12,59 @@
 
 
 using namespace std;
+// note that in the possibleMoves vector that the '.' char denotes an empty seat in the boat for that crossing.
+Cannibals::Cannibals():possibleMoves({{'E', '.'},{ 'C','.'},{ 'E','E' },{ 'C','C' },{ 'E','C' }}),
+					   failState({NULL,NULL,NULL}),
+					   baseCase({'-','-','-','-','-','-','R'})
+{
+	//this loop calls the recursive function and tries all possible moves
+	vector<vector<char>> solutionArray;
+	for (int i = 0; i < possibleMoves.size(); ++i){
+		solutionArray.clear();
+		solutionArray = TryAMove(i, leftBank);
+		if(solutionArray.back() == baseCase) break;
+	}
+	cout << "solutionArray.size() = " << solutionArray.size() << endl;
+	//this prints out the contents of the rightBank array after the recursive call
+	for(const vector<char> &vec : solutionArray)cout << PrintArray(vec) << endl;
+
+}
 
 /*
-Pre-condition: target is a valid char array 
+ * This function handles the boolean checking to ensure that a given state for the left bank
+ * is in compliance with the assignment specifications.
+ *
+Pre-condition: target is a valid char array
 Post-condition: returns true if number of explorers is more than number of
-cannibals in the array passed in, false otherwise. 
+cannibals in the array passed in, false otherwise.
 */
-bool Cannibals::ValidState(char target[])
-{ 
+bool Cannibals::ValidState(const vector<char> &target)
+{
 	int numC = 0; //will keep track of the number of Cs. 
 	int numE = 0; //will keep track of the number of Es.
-	for (int i = 0; i < SizeOfArray(target); i++)
+	for (int i = 0; i < target.size(); i++)
 	{ //this will loop through the array and keep track of the number of Es and Cs
 		if (target[i] == 'E') numE++;
-		else numC++;
+		else if(target[i] == 'C')numC++;
 	}
-	if (numC > numE) return false;
-	return true;
+	// if all the explorers are on the right bank, then we only need check if Explorers >= 0 && (cannibals >=0 && cannibals <4)
+	return numE >= 0 && numC >=0 && numE < 4 && numC < 4 && (numE <1 || numE >= numC) && target != leftBank;
 }
 
-/*
-Pre-condition: target is a valid char array 
-Post-condition: returns the number of elements in the array 
-*/
-int Cannibals::SizeOfArray(char target[])
+bool Cannibals::ValidState(const vector<char> &curState, const vector<char> &nextState)
 {
-	int numElements = 0;
-	for (int i = 0; i<sizeof(target)/ sizeof(target[0]); i++)
-	{
-		if (target[i] != NULL) numElements++;
-	}
-	return numElements;
-}
+	int currC = 0, nextC = 0; //will keep track of the number of Cs.
+	int currE = 0, nextE = 0; //will keep track of the number of Es.
+	for (int i = 0; i < curState.size(); i++)
+	{ //this will loop through the array and keep track of the number of Es and Cs
+		if (curState[i] == 'E') ++currE;
+		else if(curState[i] == 'C')++currC;
 
-/*
-Pre-condition: target is a valid char array 
-Post-condition: prints out all the elements in the array on one line 
-*/
-char Cannibals::PrintArray(char[] target)
-{
-	//prints the target array 
-	for (int i = 0; target[i]; i++)
-	{
-		cout << target[i];
+		if(nextState[i] == 'E')++nextE;
+		else if(nextState[i] == 'C')++nextC;
 	}
-	cout << endl;
+	// if all the explorers are on the right bank, then we only need check if Explorers >= 0 && (cannibals >=0 && cannibals <4)
+	return ValidState(curState) && ValidState(nextState) && nextState != curState;
 }
 
 /*
@@ -64,60 +73,28 @@ a valid char array
 Post-condition: returns true if the chars in the target vector passed 
 in were found in targetArray and sucessfully removed. 
 */
-bool Cannibals::Remove(vector<char> target, char[] targetArray)
+bool Cannibals::AddRemove(const vector<char> &nextMove, vector<char> &stateArray, const bool &goRight)
 {
-	bool sucRemove = false; //bool to keep track of whether the remove was sucessful 
-	if (target[1] != NULL) 
-	{ //the following is executed if the target char vector passed in has 2 chars 
-		for (int i = 0; i < SizeOfArray(targetArray); i++)
-		{ //removes target in index 1 of vector if target is found in targetArray 
-			if (targetArray[i] == target[1])
-			{
-				targetArray[i] = NULL;
-				sucRemove = true;
+	bool actionPerformed[2] = {false,false}; // bool to keep track of whether the remove was sucessful
+	actionPerformed[1] = nextMove[1] == '.'; // if there's an empty seat in the boat, then the second action is already done!
+	vector<char> testDummy;
+	for(const char &c : stateArray) testDummy.push_back(c);
+	for(const char &ch : nextMove){
+		for(int idxInState = 0; idxInState < testDummy.size() && !(actionPerformed[0] && actionPerformed[1]); ++idxInState){
+			// actionPerformed[0] is false until we get the first character match in the following if statement
+			if( (goRight && stateArray[idxInState] == ch) || (!goRight && stateArray[idxInState] == '-') ){
+				if(!actionPerformed[0] || !actionPerformed[1]){
+					// actionPerformed[1] won't get updated unless we've already had one character match above to set
+					// actionPerformed[0] = true
+					if(actionPerformed[0]) actionPerformed[1] = true;
+					actionPerformed[0] = true;
+					testDummy[idxInState] = (goRight)? '-': ch;
+				}
 			}
 		}
 	}
-	for (int i = 0; i < SizeOfArray(a); i++)
-	{ //removes target in index 0 of vector if target is found in targetArray 
-		if (a[i] == target[0] && sucAdd)
-		{
-			a[i] = NULL;
-			sucRemove = true;
-		}
-	}
-	return sucRemove;
-}
-
-/*
-Pre-condition: assumed that target is a valid char vector, and targetArray is 
-a valid char array
-Post-condition: returns true if the chars in the target vector passed in were
-found in targetArray and sucessfully added.
-*/
- bool Cannibals::Add(vector<char> target, char[] targetArray)
-{
-	 bool sucAdd = false; //bool to keep track of whether the addition was sucessful 
-	 if (target[1] != NULL)
-	 { //the following is executed if the target char vector passed in has 2 chars 
-		 for (int i = 0; i < SizeOfArray(targetArray); i++)
-		 { //adds target in index 1 of vector in first uninitialized index of targetArray
-			 if (targetArray[i] == NULL)
-			 {
-				 targetArray[i] = target;
-				 sucAdd = true;
-			 }
-		 }
-	 }
-	 for (int i = 0; i < SizeOfArray(targetArray); i++)
-	 { //adds target in index 0 of vector in first uninitialized index of targetArray
-		 if (targetArray[i] == NULL)
-		 {
-			 targetArray[i] = target[0];
-			 sucAdd = true;
-		 }
-	 }
-	 return sucAdd;
+	stateArray = ValidState(testDummy)? testDummy : stateArray;
+	return actionPerformed[0] && actionPerformed[1] && ValidState(testDummy);
 }
 
 /*
@@ -125,62 +102,77 @@ Pre-condition: assumed that targetIndex is a valid, initialzied int
 Post-condition: returns true if the char vector at targetIndex was able to 
 be moved from the bank the boat was on to the other bank.
 */
-bool Cannibals::MoveBoat(int targetIndex) //char[] from, char[] to) 
+bool Cannibals::MoveBoat(const int &targetIndex, vector<char> &stateArray) //char[] from, char[] to)
 {
-	// the following is executed if last char in leftBank array is L then the boat is on leftBank 
-	if (leftBank[6] == 'L')
-	{ 
-		//following is executed if remove of targetIndex of possibleMoves vector from leftBank is sucessful 
-		if (Remove(possibleMoves[targetIndex], leftBank))
-		{ 
-			leftBank[6] = 'R';
-			return Add(possibleMoves[targetIndex], rightBank);
-		}
-	}
-	else
-	{
-		//following is executed if remove of targetIndex of possibleMoves vector from rightBank is sucessful 
-		if (Remove(possibleMoves[targetIndex], rightBank))
-		{
-			leftBank[6] = 'L';
-			return Add(possibleMoves[targetIndex], leftBank); 
-		}
-	}
-	return false;
+	return AddRemove(possibleMoves[targetIndex], stateArray, stateArray[6] == 'L');
 }
 
 /*
 Pre-condition: assumed that targetIndex is a valid, initialzied int
 Post-condition: returns true if a sucessful solution was found and false otherwise 
 */
-bool Cannibals::TryAMove(int targetIndex) 
+std::vector<std::vector<char>> Cannibals::TryAMove(int &targetIndex, const vector<char> myCurState)
 {
-	//following is executed if the move of targetIndex is sucessful 
-	if (MoveBoat(targetIndex))
+	cout << PrintArray(myCurState) << "current state\n";
+	if(!ValidState(myCurState))return {failState};
+	vector<vector<char>> ret;
+	ret.push_back(myCurState);
+	if(ret.back() == baseCase)return ret;
+	vector<char> myNextState = myCurState;
+	bool movingBoat = MoveBoat(targetIndex, myNextState);
+	cout << PrintArray(myNextState) << "next state\n";
+	if (ValidState(myNextState) && movingBoat)
 	{
-		//base case
-		if (SizeOfArray(rightBank) == 6) 
+		myNextState[6] = (myNextState.back() == 'L')?'R':'L';
+		ret.push_back(myNextState);
+		if(myNextState == baseCase) return ret;
+		vector<vector<char>> goDeep;
+		for (int i = 0; i < possibleMoves.size(); ++i)
 		{
-			return true;
+			goDeep.clear();
+			goDeep = TryAMove(i,myNextState);
+			if(goDeep.back() == baseCase)break;
 		}
+		ret.assign(goDeep.begin(),goDeep.end());
 
-		// if both banks are at a valid state the for loop will try all possible moves using recursive calls 
-		if (ValidState(leftBank) && ValidState(rightBank))
-		{
-			for (int i = 0; i < possibleMoves.size(); ++i)
-			{ 
-				if (possibleMoves[i] == target) continue;
-				if (TryAMove(possibleMoves[i]))
-				{
-					return Add(TryAMove(possibleMoves[i]), solutionArray); //???
-				}
-			}
-		}
-		//IS THIS ALL THAT WILL RESET THE ARRAY 
-		TryAMove(target) //if at an invalid state this reset arrays to previous valid state
-		//Remove(TryAMove(possibleMoves[i], solutionArray)); //WOULD SOLUTIONARRAY NEED TO BE RESET
 	}
-	//if either bank is not at a valid state
-	return false;
+	return ret;
 }
 
+/*
+Pre-condition: target is a valid char array
+Post-condition: prints out all the elements in the array on one line
+*/
+string Cannibals::PrintArray(const vector<char> &target)const
+{
+	stringstream ret;
+	int explorers = 0, cannibals = 0,boat = 0;
+
+	// in this for loop we get the head count for explorers and cannibals while also building the left bank portrayal ret
+	for(const char &c : target){
+		if(c == 'E'){
+			++explorers;
+			ret << 'E';
+		} else if(c == 'C'){
+			++cannibals;
+			ret << 'C';
+		} else if(c == 'L'){
+			++boat;
+		}else{
+			ret << '-';
+		}
+	}
+	ret << " ";
+	string s = (boat == 1)?"\\../____":"____\\../";
+	ret << " ";
+	for(int exp = 0; exp < 3-explorers; ++exp){
+		ret << 'E';
+	}
+	for(int cann = 0; cann < 3-cannibals; ++cann){
+		ret << 'C';
+	}
+	for(int dirt = 0; dirt < 6 - (cannibals + explorers); ++dirt){
+		ret << '-';
+	}
+	return ret.str();
+}
