@@ -1,4 +1,0 @@
-﻿  RationalNumber.cpp
-c:\users\mitchell.nye\documents\visual studio 2017\projects\rationalnumber\rationalnumber\rationalnumber.cpp(13): warning C4101: 'waitVar': unreferenced local variable
-  RationalNumber.vcxproj -> c:\users\mitchell.nye\documents\visual studio 2017\Projects\RationalNumber\Debug\RationalNumber.exe
-  RationalNumber.vcxproj -> c:\users\mitchell.nye\documents\visual studio 2017\Projects\RationalNumber\Debug\RationalNumber.pdb (Partial PDB)
