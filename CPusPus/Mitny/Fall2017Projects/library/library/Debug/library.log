@@ -1,0 +1,5 @@
+﻿  library.cpp
+c:\users\mitchell.nye\documents\visual studio 2017\projects\library\library\bookshelf.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\mitchell.nye\documents\visual studio 2017\projects\library\library\library.cpp(14): warning C4305: 'argument': truncation from 'double' to 'float'
+  library.vcxproj -> C:\Users\mitchell.nye\Documents\Visual Studio 2017\Projects\library\Debug\library.exe
+  library.vcxproj -> C:\Users\mitchell.nye\Documents\Visual Studio 2017\Projects\library\Debug\library.pdb (Partial PDB)
