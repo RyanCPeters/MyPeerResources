@@ -131,9 +131,9 @@ vector<int> readFromRandoIntFile( const string& name){
  */
 void generateRandoIntFile(const string& name,const int &lowBound,const int &hiBound){
     ofstream myfile;
-    myfile.open("C:/Users/Peter/GitHub_remotes/MyPeerResources/CPusPus/Mitny/School/HW5/randoInts.txt", ofstream::app);
+    myfile.open(name, ofstream::app);
     std::default_random_engine generator;
-    std::uniform_int_distribution<int> distribution(1,1000);
+    std::uniform_int_distribution<int> distribution(lowBound,hiBound);
     int burner = distribution(generator);
     myfile << distribution(generator);
     for(int i = 0; i < 100;++i){
